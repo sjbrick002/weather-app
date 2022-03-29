@@ -1,0 +1,37 @@
+html {
+    font-size: 100%;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: silver;
+}
+
+.location-search-section input,
+.location-search-section select,
+.location-search-section button {
+    width: 50vw;
+    height: 5vh;
+    font-size: 1.3rem;
+}
+
+select {
+    background-color: white;
+}
+
+.location-search-section {
+    border: 1px solid red;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1.6em;
+}
+
+.invisible {
+    display: none;
+}
