@@ -1,3 +1,4 @@
+const searchSection = document.querySelector(".location-search-section-initial");
 const countryInput = document.querySelector(".country-selection");
 const stateLabel = document.querySelector("label[for='state']");
 const stateInput = document.querySelector(".state-selection");
@@ -27,7 +28,10 @@ countryInput.addEventListener("input", () => {
     };
 });
 
-button.addEventListener("click", retrieveWeatherInfo);
+button.addEventListener("click", () => {
+    searchSection.className = "location-search-section";
+    generateWeatherInfo()
+});
 
 function retrieveLocationCoordinates(cityInput, stateInput, countryInput) {
     return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityInput}${!stateInput ? "" : `,${stateInput}`},${countryInput}&appid=${k}`)
@@ -35,31 +39,40 @@ function retrieveLocationCoordinates(cityInput, stateInput, countryInput) {
         .catch(err => console.error(err));
 };
 
-async function retrieveWeatherInfo() {
+async function retrieveWeatherInfo(latitude, longitude) {
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${k}`);
+        const data = await response.json();
+        return data;
+    } catch {
+        err => console.error(err);
+    };
+};
+
+async function generateWeatherInfo() {
     try {
         const coordinateInfo = await retrieveLocationCoordinates(cityInput.value, stateInput.value, countryInput.value);
         country = coordinateInfo[0].country;
         state = coordinateInfo[0].state;
         city = coordinateInfo[0].name;
         console.log(`${city}, ${state}, ${country}`);
-        const weatherApiResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${coordinateInfo[0].lat}&lon=${coordinateInfo[0].lon}&appid=${k}`);
-        const weatherInfo = await weatherApiResponse.json();
-        temperature = weatherInfo.main.temp;
-        weatherDescription = weatherInfo.weather[0].description;
-        windSpeed = weatherInfo.wind.speed;
-        humidity = weatherInfo.main.humidity;
-        sunrise = weatherInfo.sys.sunrise;
-        sunset = weatherInfo.sys.sunset;
-        console.log(`Temp: ${temperature}, Weather: ${weatherDescription}, Wind Speed: ${windSpeed}, Humidity: ${humidity}, Sunrise: ${sunrise}, Sunset: ${sunset}`);
+        const weatherInfo = await retrieveWeatherInfo(coordinateInfo[0].lat, coordinateInfo[0].lon);
+        temperature = processTemperature(weatherInfo.main.temp);
+        weatherDescription = processWeatherDescription(weatherInfo.weather[0].description);
+        windSpeed = processWindSpeed(weatherInfo.wind.speed);
+        humidity = `${weatherInfo.main.humidity}%`;
+        sunrise = processTime(weatherInfo.sys.sunrise);
+        sunset = processTime(weatherInfo.sys.sunset);
+        console.log(`Temp: ${temperature[0]} or ${temperature[1]}, Weather: ${weatherDescription}, Wind Speed: ${windSpeed[0]} or ${windSpeed[1]}, Humidity: ${humidity}, Sunrise: ${sunrise}, Sunset: ${sunset}`);
     } catch {
         err => console.error(err);
     };
 };
 
 function processTemperature(temperature) {
-    let celsius = temperature - 273.15;
-    let fahrenheit = ((celsius * 9) / 5) + 32;
-    return [`${celsius}`, `${fahrenheit}`];
+    let celsius = Math.floor((temperature - 273.15));
+    let fahrenheit = Math.floor((((celsius * 9) / 5) + 32));
+    return [`${celsius}°C`, `${fahrenheit}°F`];
 };
 
 function processWeatherDescription(weatherDescription) {
@@ -71,8 +84,8 @@ function processWeatherDescription(weatherDescription) {
 
 function processWindSpeed(windSpeed) {
     let metersPerSec = windSpeed;
-    let milesPerHour = (windSpeed / 1609.34) * 3600;
-    return [`${metersPerSec}`, `${milesPerHour}`];
+    let milesPerHour = Math.round((windSpeed / 1609.34) * 3600);
+    return [`${metersPerSec} m/s`, `${milesPerHour} mph`];
 };
 
 function processTime(seconds) {
@@ -82,6 +95,5 @@ function processTime(seconds) {
     let modifiedHour = (hour < 13) ? hour : hour - 12;
     let minutes = time.getMinutes();
     let timeIndicator = (hour < 13) ? "AM" : "PM";
-    console.log(seconds);
-    console.log(`${modifiedHour}:${minutes} ${timeIndicator}`);
+    return `${modifiedHour}:${minutes} ${timeIndicator}`
 };

@@ -11,9 +11,9 @@ body {
     background-color: silver;
 }
 
-.location-search-section input,
-.location-search-section select,
-.location-search-section button {
+.location-search-section-initial input,
+.location-search-section-initial select,
+.location-search-section-initial button {
     width: 50vw;
     height: 5vh;
     font-size: 1.3rem;
@@ -23,13 +23,20 @@ select {
     background-color: white;
 }
 
-.location-search-section {
-    border: 1px solid red;
+.location-search-section-initial {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-around;
     align-items: center;
     font-size: 1.6em;
+}
+
+.location-search-section {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1em;
 }
 
 .invisible {
