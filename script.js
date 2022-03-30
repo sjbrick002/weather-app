@@ -59,14 +59,29 @@ async function retrieveWeatherInfo() {
 function processTemperature(temperature) {
     let celsius = temperature - 273.15;
     let fahrenheit = ((celsius * 9) / 5) + 32;
-    return [celsius, fahrenheit];
+    return [`${celsius}`, `${fahrenheit}`];
 };
 
 function processWeatherDescription(weatherDescription) {
     let descriptionArray = weatherDescription.split("");
-    console.log(descriptionArray);
     descriptionArray = descriptionArray.map((letter, index) => (index === 0 || descriptionArray[index - 1] === " ") ? letter.toUpperCase() : letter.toLowerCase());
-    console.log(descriptionArray);
     descriptionString = descriptionArray.join("");
-    console.log(descriptionString);
+    return descriptionString;
+};
+
+function processWindSpeed(windSpeed) {
+    let metersPerSec = windSpeed;
+    let milesPerHour = (windSpeed / 1609.34) * 3600;
+    return [`${metersPerSec}`, `${milesPerHour}`];
+};
+
+function processTime(seconds) {
+    let time = new Date();
+    time.setTime(seconds * 1000);
+    let hour =  time.getHours() + 1;
+    let modifiedHour = (hour < 13) ? hour : hour - 12;
+    let minutes = time.getMinutes();
+    let timeIndicator = (hour < 13) ? "AM" : "PM";
+    console.log(seconds);
+    console.log(`${modifiedHour}:${minutes} ${timeIndicator}`);
 };
