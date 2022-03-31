@@ -4,6 +4,15 @@ const stateLabel = document.querySelector("label[for='state']");
 const stateInput = document.querySelector(".state-selection");
 const cityInput = document.querySelector(".city-input");
 const button = document.querySelector("button");
+
+const main = document.querySelector("main");
+const locationStat = document.querySelector(".location-stat");
+const tempStat = document.querySelector(".temp-stat");
+const descriptionStat = document.querySelector(".description-stat");
+const windStat = document.querySelector(".windspeed-stat");
+const humidityStat = document.querySelector(".humidity-stat");
+const sunriseStat = document.querySelector(".sunrise-stat");
+const sunsetStat = document.querySelector(".sunset-stat");
 const k = "cbef1da7b0112adb5da24e3be58bc728";
 
 let country;
@@ -28,9 +37,17 @@ countryInput.addEventListener("input", () => {
     };
 });
 
-button.addEventListener("click", () => {
+button.addEventListener("click", async function() {
     searchSection.className = "location-search-section";
-    generateWeatherInfo()
+    const weather = await generateWeatherInfo();
+    if (main.className === "invisible") {main.className = ""};
+    locationStat.textContent = weather.location;
+    tempStat.textContent = weather.temperature[0];
+    descriptionStat.textContent = weather.weatherDescription;
+    windStat.textContent = `Wind Speed: ${weather.windSpeed[0]}`;
+    humidityStat.textContent = `Humidity: ${weather.humidity}`;
+    sunriseStat.textContent = `Sunrise: ${weather.sunrise}`;
+    sunsetStat.textContent = `Sunset: ${weather.sunset}`;
 });
 
 function retrieveLocationCoordinates(cityInput, stateInput, countryInput) {
@@ -93,6 +110,15 @@ async function generateWeatherInfo() {
         sunrise = processor.time(weatherInfo.sys.sunrise);
         sunset = processor.time(weatherInfo.sys.sunset);
         console.log(`Temp: ${temperature[0]} or ${temperature[1]}, Weather: ${weatherDescription}, Wind Speed: ${windSpeed[0]} or ${windSpeed[1]}, Humidity: ${humidity}, Sunrise: ${sunrise}, Sunset: ${sunset}`);
+        return {
+            location: `${city}, ${state}, ${country}`,
+            temperature,
+            weatherDescription,
+            windSpeed,
+            humidity,
+            sunrise,
+            sunset
+        }
     } catch {
         err => console.error(err);
     };
