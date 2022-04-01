@@ -78,7 +78,7 @@ const processor = (() => {
 })();
 
 function retrieveLocationCoordinates(cityInput, stateInput, countryInput) {
-    return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityInput}${!stateInput ? "" : `,${stateInput}`},${countryInput}&appid=${k}`, {mode: "cors"})
+    return fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cityInput}${!stateInput ? "" : `,${stateInput}`},${countryInput}&appid=${k}`, {mode: "cors"})
         .then(response => response.json())
         .catch(err => console.error(err));
 };
