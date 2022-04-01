@@ -3,11 +3,13 @@ const countryInput = document.querySelector(".country-selection");
 const stateLabel = document.querySelector("label[for='state']");
 const stateInput = document.querySelector(".state-selection");
 const cityInput = document.querySelector(".city-input");
-const button = document.querySelector("button");
+const weatherBtn = document.querySelector(".weather-button");
 
+const loadingScreen = document.querySelector(".loading-screen");
 const main = document.querySelector("main");
 const weatherIcon = document.querySelector(".weather-icon");
 const locationStat = document.querySelector(".location-stat");
+const conversionBtn = document.querySelector(".conversion-button");
 const tempStat = document.querySelector(".temp-stat");
 const descriptionStat = document.querySelector(".description-stat");
 const windStat = document.querySelector(".windspeed-stat");
@@ -27,9 +29,11 @@ countryInput.addEventListener("input", () => {
     };
 });
 
-button.addEventListener("click", async function() {
+weatherBtn.addEventListener("click", async function() {
     searchSection.className = "location-search-section";
+    loadingScreen.className = "loading-screen";
     const weather = await generateWeatherInfo();
+    loadingScreen.className = "loading-screen invisible"
     if (main.className === "invisible") {main.className = ""};
     if (weather.weatherClassification === "Thunderstorm") {
         weatherIcon.setAttribute("src", "./img/images.png");
@@ -59,6 +63,8 @@ button.addEventListener("click", async function() {
     sunriseStat.textContent = `Sunrise: ${weather.sunrise}`;
     sunsetStat.textContent = `Sunset: ${weather.sunset}`;
 });
+
+//conversionBtn.addEventListener("click", () => {});
 
 function retrieveLocationCoordinates(cityInput, stateInput, countryInput) {
     return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityInput}${!stateInput ? "" : `,${stateInput}`},${countryInput}&appid=${k}`)

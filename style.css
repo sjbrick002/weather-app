@@ -49,8 +49,55 @@ select {
     padding-right: 6px;
 }
 
+.loading-screen {
+    width: 100%;
+    height: 90%;
+    background-color: black;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
 .invisible {
     display: none;
+}
+
+.color-circle {
+    width: 20vw;
+    height: 20vw;
+    background: linear-gradient(0deg, white 0%, white 70%, gold 70%);
+    border-radius: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation-name: loading-circle;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes loading-circle {
+    0% {background: linear-gradient(0deg, white 0%, white 70%, gold 70%)}
+    10% {background: linear-gradient(324deg, white 0%, white 70%, gold 70%)}
+    20% {background: linear-gradient(288deg, white 0%, white 70%, gold 70%)}
+    30% {background: linear-gradient(252deg, white 0%, white 70%, gold 70%)}
+    40% {background: linear-gradient(216deg, white 0%, white 70%, gold 70%)}
+    50% {background: linear-gradient(180deg, white 0%, white 70%, gold 70%)}
+    60% {background: linear-gradient(144deg, white 0%, white 70%, gold 70%)}
+    70% {background: linear-gradient(108deg, white 0%, white 70%, gold 70%)}
+    80% {background: linear-gradient(72deg, white 0%, white 70%, gold 70%)}
+    90% {background: linear-gradient(36deg, white 0%, white 70%, gold 70%)}
+    100% {background: linear-gradient(0deg, white 0%, white 70%, gold 70%)}
+}
+
+.small-circle {
+    width: 15vw;
+    height: 15vw;
+    background-color: black;
+    border-radius: 100%;
 }
 
 main {

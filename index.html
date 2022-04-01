@@ -352,7 +352,12 @@
         </select>
         <label for="city">City</label>
         <input id="city" class="city-input" type="text" placeholder="City">
-        <button type="button">What's the weather?</button>
+        <button class="weather-button" type="button">What's the weather?</button>
+    </div>
+    <div class="loading-screen invisible">
+        <div class="color-circle">
+            <div class="small-circle"></div>
+        </div>
     </div>
     <main class="invisible">
         <img class="weather-icon" src="" alt="">
@@ -366,7 +371,7 @@
                     <p class="sunset-stat weather-stat"></p>
                 </div>
                 <div>
-                    <p>Convert to: <button class="convert-units-btn">Imperial</button></p>
+                    <p>Convert to: <button class="conversion-button">Imperial</button></p>
                     <p class="temp-stat weather-stat"></p>
                     <p class="description-stat weather-stat"></p>
                 </div>
