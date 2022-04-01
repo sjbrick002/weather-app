@@ -113,7 +113,7 @@ main {
 .weather-icon {
     width: clamp(400px, 40vw, 850px);
     height: max(400px, 90%);
-    background-color: white;
+    background-color: whitesmoke;
     border: 3px solid gold;
     border-radius: 12px;
 }
@@ -129,7 +129,7 @@ main {
 .weather-stats {
     width: clamp(400px, 40vw, 850px);
     height: max(250px, 50%);
-    background-color: white;
+    background-color: whitesmoke;
     border: 3px solid gold;
     border-radius: 12px;
     font-size: 1.3em;
@@ -157,8 +157,21 @@ main {
 .weather-conclusion {
     width: clamp(400px, 40vw, 850px);
     height: max(150px, 30%);
-    background-color: white;
+    background-color: whitesmoke;
     border: 3px solid gold;
     border-radius: 12px;
+    font-size: 1.7em;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+}
+
+blockquote {
+    margin: 0;
     font-size: 1.3em;
+}
+
+.speaker {
+    margin-right: 24px;
+    text-align: right;
 }

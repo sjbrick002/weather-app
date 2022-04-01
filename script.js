@@ -16,6 +16,8 @@ const windStat = document.querySelector(".windspeed-stat");
 const humidityStat = document.querySelector(".humidity-stat");
 const sunriseStat = document.querySelector(".sunrise-stat");
 const sunsetStat = document.querySelector(".sunset-stat");
+const adviceQuote =  document.querySelector("blockquote");
+const adviceSpeaker = document.querySelector(".speaker");
 const k = "cbef1da7b0112adb5da24e3be58bc728";
 
 const eventListeners = (() => {
@@ -40,6 +42,7 @@ const eventListeners = (() => {
     });
     conversionBtn.addEventListener("click", () => {
         unit = (unit === 0) ? 1 : 0;
+        conversionBtn.textContent = (unit === 0) ? "Imperial" : "Metric";
         tempStat.textContent = weather.temperature[unit];
         windStat.textContent = `Wind Speed: ${weather.windSpeed[unit]}`;
     });
@@ -126,21 +129,33 @@ function displayWeatherInfo(weather, unit) {
     if (weather.weatherClassification === "Thunderstorm") {
         weatherIcon.setAttribute("src", "./img/images.png");
         weatherIcon.setAttribute("alt", "Painting of a thunderstorm");
+        adviceQuote.textContent = "It's storming outside! Let's stay in and read today!";
+        adviceSpeaker.textContent = "-Turtle";
     } else if (weather.weatherClassification === "Drizzle" || weather.weatherClassification === "Rain") {
         weatherIcon.setAttribute("src", "./img/6e664d22666e826843cdfefc957b11fe.jpg");
         weatherIcon.setAttribute("alt", "Picture of rain puddle");
+        adviceQuote.textContent = "Get your rain gear there are puddles to splash!";
+        adviceSpeaker.textContent = "-Otter";
     } else if (weather.weatherClassification === "Snow") {
         weatherIcon.setAttribute("src", "./img/images.png");
         weatherIcon.setAttribute("alt", "Blue nowflake");
+        adviceQuote.textContent = "Huddle up! It's cold outside!";
+        adviceSpeaker.textContent = "-Penguin";
     } else if (weather.weatherClassification === "Clear") {
         weatherIcon.setAttribute("src", "./img/ryanlerch_simple_sun_motif_preview_57db.png");
         weatherIcon.setAttribute("alt", "Picture of rain puddle");
+        adviceQuote.textContent = "The sun is out! Time for a run!";
+        adviceSpeaker.textContent = "-Cheetah";
     } else if (weather.weatherClassification === "Clouds") {
         weatherIcon.setAttribute("src", "./img/storm-clouds-jutta-kuss.jpg");
         weatherIcon.setAttribute("alt", "Picture of clouds");
+        adviceQuote.textContent = "Looks like a great day for cloud watching!";
+        adviceSpeaker.textContent = "-Crow";
     } else {
         weatherIcon.setAttribute("src", "./img/Exclamation Mark.jpg");
         weatherIcon.setAttribute("alt", "Alert icon");
+        adviceQuote.textContent = "Be careful! The weather is being weird.";
+        adviceSpeaker.textContent = "-Platypus";
     }
 
     locationStat.textContent = weather.location;
