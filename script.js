@@ -6,6 +6,7 @@ const cityInput = document.querySelector(".city-input");
 const button = document.querySelector("button");
 
 const main = document.querySelector("main");
+const weatherIcon = document.querySelector(".weather-icon");
 const locationStat = document.querySelector(".location-stat");
 const tempStat = document.querySelector(".temp-stat");
 const descriptionStat = document.querySelector(".description-stat");
@@ -14,17 +15,6 @@ const humidityStat = document.querySelector(".humidity-stat");
 const sunriseStat = document.querySelector(".sunrise-stat");
 const sunsetStat = document.querySelector(".sunset-stat");
 const k = "cbef1da7b0112adb5da24e3be58bc728";
-
-let country;
-let state;
-let city;
-
-let temperature;
-let weatherDescription;
-let windSpeed;
-let humidity;
-let sunrise;
-let sunset;
 
 countryInput.addEventListener("input", () => {
     if (countryInput.value === "US") {
@@ -41,6 +31,26 @@ button.addEventListener("click", async function() {
     searchSection.className = "location-search-section";
     const weather = await generateWeatherInfo();
     if (main.className === "invisible") {main.className = ""};
+    if (weather.weatherClassification === "Thunderstorm") {
+        weatherIcon.setAttribute("src", "./img/images.png");
+        weatherIcon.setAttribute("alt", "Painting of a thunderstorm");
+    } else if (weather.weatherClassification === "Drizzle" || weather.weatherClassification === "Rain") {
+        weatherIcon.setAttribute("src", "./img/6e664d22666e826843cdfefc957b11fe.jpg");
+        weatherIcon.setAttribute("alt", "Picture of rain puddle");
+    } else if (weather.weatherClassification === "Snow") {
+        weatherIcon.setAttribute("src", "./img/images.png");
+        weatherIcon.setAttribute("alt", "Blue nowflake");
+    } else if (weather.weatherClassification === "Clear") {
+        weatherIcon.setAttribute("src", "./img/ryanlerch_simple_sun_motif_preview_57db.png");
+        weatherIcon.setAttribute("alt", "Picture of rain puddle");
+    } else if (weather.weatherClassification === "Clouds") {
+        weatherIcon.setAttribute("src", "./img/storm-clouds-jutta-kuss.jpg");
+        weatherIcon.setAttribute("alt", "Picture of clouds");
+    } else {
+        weatherIcon.setAttribute("src", "./img/Exclamation Mark.jpg");
+        weatherIcon.setAttribute("alt", "Alert icon");
+    }
+
     locationStat.textContent = weather.location;
     tempStat.textContent = weather.temperature[0];
     descriptionStat.textContent = weather.weatherDescription;
@@ -98,20 +108,22 @@ const processor = (() => {
 async function generateWeatherInfo() {
     try {
         const coordinateInfo = await retrieveLocationCoordinates(cityInput.value, stateInput.value, countryInput.value);
-        country = coordinateInfo[0].country;
-        state = coordinateInfo[0].state;
-        city = coordinateInfo[0].name;
+        let country = coordinateInfo[0].country;
+        let state = coordinateInfo[0].state;
+        let city = coordinateInfo[0].name;
         console.log(`${city}, ${state}, ${country}`);
         const weatherInfo = await retrieveWeatherInfo(coordinateInfo[0].lat, coordinateInfo[0].lon);
-        temperature = processor.temperature(weatherInfo.main.temp);
-        weatherDescription = processor.weatherDescription(weatherInfo.weather[0].description);
-        windSpeed = processor.windSpeed(weatherInfo.wind.speed);
-        humidity = `${weatherInfo.main.humidity}%`;
-        sunrise = processor.time(weatherInfo.sys.sunrise);
-        sunset = processor.time(weatherInfo.sys.sunset);
+        let weatherClassification = weatherInfo.weather[0].main;
+        let temperature = processor.temperature(weatherInfo.main.temp);
+        let weatherDescription = processor.weatherDescription(weatherInfo.weather[0].description);
+        let windSpeed = processor.windSpeed(weatherInfo.wind.speed);
+        let humidity = `${weatherInfo.main.humidity}%`;
+        let sunrise = processor.time(weatherInfo.sys.sunrise);
+        let sunset = processor.time(weatherInfo.sys.sunset);
         console.log(`Temp: ${temperature[0]} or ${temperature[1]}, Weather: ${weatherDescription}, Wind Speed: ${windSpeed[0]} or ${windSpeed[1]}, Humidity: ${humidity}, Sunrise: ${sunrise}, Sunset: ${sunset}`);
         return {
             location: `${city}, ${state}, ${country}`,
+            weatherClassification,
             temperature,
             weatherDescription,
             windSpeed,
