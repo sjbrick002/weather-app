@@ -18,69 +18,32 @@ const sunriseStat = document.querySelector(".sunrise-stat");
 const sunsetStat = document.querySelector(".sunset-stat");
 const k = "cbef1da7b0112adb5da24e3be58bc728";
 
-countryInput.addEventListener("input", () => {
-    if (countryInput.value === "US") {
-        stateLabel.className = "";
-        stateInput.className = "state-selection";
-    } else {
-        stateLabel.className = "invisible";
-        stateInput.className = "state-selection invisible";
-        stateInput.value = "";
-    };
-});
-
-weatherBtn.addEventListener("click", async function() {
-    searchSection.className = "location-search-section";
-    loadingScreen.className = "loading-screen";
-    const weather = await generateWeatherInfo();
-    loadingScreen.className = "loading-screen invisible"
-    if (main.className === "invisible") {main.className = ""};
-    if (weather.weatherClassification === "Thunderstorm") {
-        weatherIcon.setAttribute("src", "./img/images.png");
-        weatherIcon.setAttribute("alt", "Painting of a thunderstorm");
-    } else if (weather.weatherClassification === "Drizzle" || weather.weatherClassification === "Rain") {
-        weatherIcon.setAttribute("src", "./img/6e664d22666e826843cdfefc957b11fe.jpg");
-        weatherIcon.setAttribute("alt", "Picture of rain puddle");
-    } else if (weather.weatherClassification === "Snow") {
-        weatherIcon.setAttribute("src", "./img/images.png");
-        weatherIcon.setAttribute("alt", "Blue nowflake");
-    } else if (weather.weatherClassification === "Clear") {
-        weatherIcon.setAttribute("src", "./img/ryanlerch_simple_sun_motif_preview_57db.png");
-        weatherIcon.setAttribute("alt", "Picture of rain puddle");
-    } else if (weather.weatherClassification === "Clouds") {
-        weatherIcon.setAttribute("src", "./img/storm-clouds-jutta-kuss.jpg");
-        weatherIcon.setAttribute("alt", "Picture of clouds");
-    } else {
-        weatherIcon.setAttribute("src", "./img/Exclamation Mark.jpg");
-        weatherIcon.setAttribute("alt", "Alert icon");
-    }
-
-    locationStat.textContent = weather.location;
-    tempStat.textContent = weather.temperature[0];
-    descriptionStat.textContent = weather.weatherDescription;
-    windStat.textContent = `Wind Speed: ${weather.windSpeed[0]}`;
-    humidityStat.textContent = `Humidity: ${weather.humidity}`;
-    sunriseStat.textContent = `Sunrise: ${weather.sunrise}`;
-    sunsetStat.textContent = `Sunset: ${weather.sunset}`;
-});
-
-//conversionBtn.addEventListener("click", () => {});
-
-function retrieveLocationCoordinates(cityInput, stateInput, countryInput) {
-    return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityInput}${!stateInput ? "" : `,${stateInput}`},${countryInput}&appid=${k}`)
-        .then(response => response.json())
-        .catch(err => console.error(err));
-};
-
-async function retrieveWeatherInfo(latitude, longitude) {
-    try {
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${k}`);
-        const data = await response.json();
-        return data;
-    } catch {
-        err => console.error(err);
-    };
-};
+const eventListeners = (() => {
+    countryInput.addEventListener("input", () => {
+        if (countryInput.value === "US") {
+            stateLabel.className = "";
+            stateInput.className = "state-selection";
+        } else {
+            stateLabel.className = "invisible";
+            stateInput.className = "state-selection invisible";
+            stateInput.value = "";
+        };
+    });
+    let weather;
+    let unit = 0;
+    weatherBtn.addEventListener("click", async function() {
+        searchSection.className = "location-search-section";
+        loadingScreen.className = "loading-screen";
+        weather = await generateWeatherInfo();
+        loadingScreen.className = "loading-screen invisible"
+        displayWeatherInfo(weather, unit);
+    });
+    conversionBtn.addEventListener("click", () => {
+        unit = (unit === 0) ? 1 : 0;
+        tempStat.textContent = weather.temperature[unit];
+        windStat.textContent = `Wind Speed: ${weather.windSpeed[unit]}`;
+    });
+})();
 
 const processor = (() => {
     function temperature(temperature) {
@@ -111,6 +74,22 @@ const processor = (() => {
     return {temperature, weatherDescription, windSpeed, time};
 })();
 
+function retrieveLocationCoordinates(cityInput, stateInput, countryInput) {
+    return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityInput}${!stateInput ? "" : `,${stateInput}`},${countryInput}&appid=${k}`)
+        .then(response => response.json())
+        .catch(err => console.error(err));
+};
+
+async function retrieveWeatherInfo(latitude, longitude) {
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${k}`);
+        const data = await response.json();
+        return data;
+    } catch {
+        err => console.error(err);
+    };
+};
+
 async function generateWeatherInfo() {
     try {
         const coordinateInfo = await retrieveLocationCoordinates(cityInput.value, stateInput.value, countryInput.value);
@@ -140,4 +119,35 @@ async function generateWeatherInfo() {
     } catch {
         err => console.error(err);
     };
+};
+
+function displayWeatherInfo(weather, unit) {
+    if (main.className === "invisible") {main.className = ""};
+    if (weather.weatherClassification === "Thunderstorm") {
+        weatherIcon.setAttribute("src", "./img/images.png");
+        weatherIcon.setAttribute("alt", "Painting of a thunderstorm");
+    } else if (weather.weatherClassification === "Drizzle" || weather.weatherClassification === "Rain") {
+        weatherIcon.setAttribute("src", "./img/6e664d22666e826843cdfefc957b11fe.jpg");
+        weatherIcon.setAttribute("alt", "Picture of rain puddle");
+    } else if (weather.weatherClassification === "Snow") {
+        weatherIcon.setAttribute("src", "./img/images.png");
+        weatherIcon.setAttribute("alt", "Blue nowflake");
+    } else if (weather.weatherClassification === "Clear") {
+        weatherIcon.setAttribute("src", "./img/ryanlerch_simple_sun_motif_preview_57db.png");
+        weatherIcon.setAttribute("alt", "Picture of rain puddle");
+    } else if (weather.weatherClassification === "Clouds") {
+        weatherIcon.setAttribute("src", "./img/storm-clouds-jutta-kuss.jpg");
+        weatherIcon.setAttribute("alt", "Picture of clouds");
+    } else {
+        weatherIcon.setAttribute("src", "./img/Exclamation Mark.jpg");
+        weatherIcon.setAttribute("alt", "Alert icon");
+    }
+
+    locationStat.textContent = weather.location;
+    tempStat.textContent = weather.temperature[unit];
+    descriptionStat.textContent = weather.weatherDescription;
+    windStat.textContent = `Wind Speed: ${weather.windSpeed[unit]}`;
+    humidityStat.textContent = `Humidity: ${weather.humidity}`;
+    sunriseStat.textContent = `Sunrise: ${weather.sunrise}`;
+    sunsetStat.textContent = `Sunset: ${weather.sunset}`;
 };
